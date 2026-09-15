@@ -33,6 +33,7 @@
 
 #if ENABLE_LIBVMAF
 #include "libvmaf/libvmaf.h"
+#include "libvmaf/version.h"
 #endif
 
 /* multilib namespace reflectors */
