@@ -1975,7 +1975,7 @@ int compute_vmaf(double* vmaf_score, char* fmt, int width, int height, int bitde
     float *temp_data = new float[height * stride];
     enum VmafOutputFormat output_fmt = log_fmt_map(log_fmt);
 
-#if VMAF_BUILT_IN_MODELS && VMAF_FLOAT_FEATURES
+#if VMAF_API_VERSION_MAJOR >= 2 && VMAF_API_VERSION_MINOR >= 1
     if (width < 3656 && height < 1714) {
         vmaf_model_load(&model, &model_cfg, "vmaf_float_v0.6.1");
     } else {
