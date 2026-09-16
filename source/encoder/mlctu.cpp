@@ -79,11 +79,14 @@ static int mlIntraOpThreads(int poolWidth, int cpuCount)
 }
 
 MLCTUPredictor::MLCTUPredictor(x265_param* param)
-{
-    this->m_param = param;
-    this->m_intraOpThreads = ML_MAX_INTRAOP_THREADS;
-    this->m_prepThreads = ML_MAX_INTRAOP_THREADS;
-}
+    : m_param(param)
+    , maxCUSize(0)
+    , totalCTUs(0)
+    , m_intraOpThreads(ML_MAX_INTRAOP_THREADS)
+    , m_prepThreads(ML_MAX_INTRAOP_THREADS)
+    , m_env(NULL)
+    , m_sessions()
+{}
 
 MLCTUPredictor::~MLCTUPredictor()
 {
@@ -306,7 +309,7 @@ void MLCTUPredictor::preprocessInput(pixel* plane, intptr_t stride, MLCTUBuffers
 
         ALIGN_VAR_32(pixel, local[64][64]);
 
-        const pixel* plane_pixel = (const pixel*)plane;
+        const pixel* plane_pixel = static_cast<const pixel*>(plane);
         const bool isFullWidth = (cx + 1) * 64 <= width;
         const bool isFullHeight = (cy + 1) * 64 <= height;
 
@@ -539,14 +542,14 @@ void MLCTUPredictor::run_model(CTUPartitionInference* ctu, MLCTUBuffers& buffers
 
     if (ok)
     {
-        status = ctu->ort->GetTensorMutableData(output_tensor[0], (void**)&raw0);
+        status = ctu->ort->GetTensorMutableData(output_tensor[0],reinterpret_cast<void**>(&raw0));
         if (!status)
-            status = ctu->ort->GetTensorMutableData(output_tensor[1], (void**)&raw1);
+            status = ctu->ort->GetTensorMutableData(output_tensor[1],reinterpret_cast<void**>(&raw1));
         if (!status)
-            status = ctu->ort->GetTensorMutableData(output_tensor[2], (void**)&raw2);
+            status = ctu->ort->GetTensorMutableData(output_tensor[2],reinterpret_cast<void**>(&raw2));
         if (status)
         {
-            fprintf(stderr, "GetTensorMutableData failed\n");
+           fprintf(stderr, "GetTensorMutableData failed\n");
             ctu->ort->ReleaseStatus(status);
             ok = false;
         }
