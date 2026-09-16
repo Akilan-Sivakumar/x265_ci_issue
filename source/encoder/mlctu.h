@@ -61,7 +61,8 @@
 #include <chrono>
 #endif
 
-namespace X265_NS {
+namespace X265_NS
+{
 
 typedef struct {
     const OrtApi* ort;           // ONNX Runtime API
@@ -166,7 +167,7 @@ public:
     std::queue<MLPredictionRequest*> m_requestQueue;
     Lock                             m_queueLock;
 
-    MLCTUPredictor(x265_param* param);
+    explicit MLCTUPredictor(x265_param* param);
     ~MLCTUPredictor();
     bool init();
     CTUPartitionInference* init_ctu_onnx(const char*);
@@ -182,7 +183,7 @@ public:
 
     // JobProvider virtual method
     void findJob(int workerThreadId);
-    
+
     // Add request and trigger prediction
     bool enqueuePreprocessRequest(MLPredictionRequest* req);
     void enqueuePreparedRequest(MLPredictionRequest* req);
