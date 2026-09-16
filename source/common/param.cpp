@@ -1169,7 +1169,6 @@ int x265_param_parse(x265_param* p, const char* name, const char* value)
     OPT("rd-refine") p->bEnableRdRefine = atobool(value);
     OPT("signhide") p->bEnableSignHiding = atobool(value);
     OPT("b-intra") p->bIntraInBFrames = atobool(value);
-    OPT("intra-64x64") p->bEnableIntra64x64 = atobool(value);
     OPT("lft") p->bEnableLoopFilter = atobool(value); /* DEPRECATED */
     OPT("deblock")
     {
@@ -1573,6 +1572,8 @@ int x265_param_parse(x265_param* p, const char* name, const char* value)
         OPT("fovea-sigma") p->foveaSigma = (float)atof(value);
         OPT("fovea-gaze-file") p->foveaGazeFile = strdup(value);
         OPT("ml-ctu-pred") p->bEnableMLCTUPred = atobool(value);
+        OPT("intra-64x64") p->bEnableIntra64x64 = atobool(value);
+
         else
             return X265_PARAM_BAD_NAME;
     }
