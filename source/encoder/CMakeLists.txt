@@ -45,3 +45,7 @@ add_library(encoder OBJECT ../x265.h
     api.cpp
     weightPrediction.cpp svt.h
     threadedme.h threadedme.cpp)
+
+if(ENABLE_MLCTUPRED)
+    target_sources(encoder PRIVATE mlctu.cpp mlctu.h)
+endif()
